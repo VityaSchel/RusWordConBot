@@ -20,7 +20,10 @@ app.post(`/bot${TOKEN}`, (req, reply) => {
   reply.code(200)
 })
 
-app.listen(port, () => console.log(`Conjugation bot server is listening on http://localhost:${port}`))
+app.listen(port, (err, address) => {
+  if(err) throw err
+  console.log(`Conjugation bot server is listening on ${address}`)
+})
 
 const dburl = `mongodb://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_IP}:${process.env.DB_PORT}/?authSource=admin&readPreference=primary`
 const dbName = 'conjugation_bot'
@@ -102,4 +105,5 @@ process.on('SIGINT', () => {
   app.close()
   dbclient.close()
   console.log('Closed all connections')
+  process.exit(2)
 })

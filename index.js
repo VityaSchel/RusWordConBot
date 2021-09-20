@@ -10,14 +10,13 @@ const TOKEN = process.env.TELEGRAM_TOKEN
 
 const bot = new TelegramBot(TOKEN)
 
-// bot.setWebHook(`${url}/bot${TOKEN}`, { drop_pending_updates: true })
+bot.setWebHook(`${url}/bot${TOKEN}`, { drop_pending_updates: true })
 
 const app = fastify()
 
 app.post(`/bot${TOKEN}`, (req, reply) => {
-  console.log(req.body)
   bot.processUpdate(req.body)
-  reply.code(200)
+  reply.status(200).send()
 })
 
 app.listen(port, '127.0.0.1', (err, address) => {
@@ -31,15 +30,15 @@ const dbclient = new mongodb.MongoClient(dburl)
 let db
 dbclient.connect(err => {
   assert.equal(null, err)
-  console.log('Connected successfully to server')
+  console.log('Successfully connected to server')
   db = dbclient.db(dbName)
 })
 
-// bot.on('message', async msg => {
-//   if(msg.chat.type !== 'private'){ return }
-//   await checkPreviousWord(msg)
-//   sendNewWord(msg)
-// })
+bot.on('message', async msg => {
+  if(msg.chat.type !== 'private'){ return }
+  await checkPreviousWord(msg)
+  sendNewWord(msg)
+})
 
 const checkPreviousWord = async msg => {
   let { correctConjIndex, isException } = await previousWord(msg.chat.id)

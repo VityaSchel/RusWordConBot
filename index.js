@@ -1,6 +1,6 @@
 import 'dotenv/config'
 import TelegramBot from 'node-telegram-bot-api'
-import express from 'express'
+import fastify from 'fastify'
 import MongoClient from 'mongodb'
 import assert from 'assert'
 
@@ -12,12 +12,13 @@ const bot = new TelegramBot(TOKEN)
 
 bot.setWebHook(`${url}/bot${TOKEN}`, {drop_pending_updates: true})
 
-const app = express()
-app.use(express.json())
+const app = fastify()
+fastify.addContentTypeParser('application/json', { parseAs: 'string' }, fastify.getDefaultJsonParser('ignore', 'ignore'))
 
-app.post(`/bot${TOKEN}`, (req, res) => {
-  bot.processUpdate(req.body)
-  res.sendStatus(200)
+app.post(`/bot${TOKEN}`, (req, reply) => {
+  console.log(req.body)
+  // bot.processUpdate(req.body)
+  reply.code(200)
 })
 
 let server = app.listen(port, () => console.log(`Conjugation bot server is listening on http://localhost:${port}`))

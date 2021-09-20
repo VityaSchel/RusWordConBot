@@ -1,7 +1,7 @@
 import 'dotenv/config'
 import TelegramBot from 'node-telegram-bot-api'
 import fastify from 'fastify'
-import MongoClient from 'mongodb'
+import mongodb from 'mongodb'
 import assert from 'assert'
 
 const url = 'https://conjugationbot.utidteam.com'
@@ -25,7 +25,7 @@ let server = app.listen(port, () => console.log(`Conjugation bot server is liste
 
 const dburl = `mongodb://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_IP}:${process.env.DB_PORT}/?authSource=admin&readPreference=primary`
 const dbName = 'conjugation_bot'
-const dbclient = new MongoClient(dburl)
+const dbclient = new mongodb.MongoClient(dburl)
 let db
 dbclient.connect(err => {
   assert.equal(null, err)

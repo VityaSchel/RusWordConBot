@@ -6,22 +6,22 @@ import assert from 'assert'
 
 const url = 'https://conjugationbot.utidteam.com'
 const port = 24521
+console.log('env', process.env)
 const TOKEN = process.env.TELEGRAM_TOKEN
 
 const bot = new TelegramBot(TOKEN)
 
-bot.setWebHook(`${url}/bot${TOKEN}`, {drop_pending_updates: true})
+bot.setWebHook(`${url}/bot${TOKEN}`, { drop_pending_updates: true })
 
 const app = fastify()
-// fastify.addContentTypeParser('application/json', { parseAs: 'string' }, fastify.getDefaultJsonParser('ignore', 'ignore'))
 
 app.post(`/bot${TOKEN}`, (req, reply) => {
   console.log(req.body)
-  // bot.processUpdate(req.body)
+  bot.processUpdate(req.body)
   reply.code(200)
 })
 
-let server = app.listen(port, () => console.log(`Conjugation bot server is listening on http://localhost:${port}`))
+app.listen(port, () => console.log(`Conjugation bot server is listening on http://localhost:${port}`))
 
 const dburl = `mongodb://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_IP}:${process.env.DB_PORT}/?authSource=admin&readPreference=primary`
 const dbName = 'conjugation_bot'
@@ -99,6 +99,6 @@ const generateNewWord = userID => {
 const randomIndice = array => array[Math.floor(Math.random()*array.length)]
 
 process.on('SIGINT', () => {
-  server.close()
+  app.close()
   dbclient.close()
 })

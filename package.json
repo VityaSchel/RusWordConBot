@@ -1,0 +1,37 @@
+{
+  "name": "conjugation_bot",
+  "version": "2.0.0",
+  "description": "Бот для тренировки умения различать 1-ое и 2-ое спряжение в русском языке",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VityaSchel/ruswordconbot.git"
+  },
+  "keywords": [
+    "bot",
+    "telegram",
+    "telegram-bot",
+    "tgbot",
+    "russian",
+    "russian-language"
+  ],
+  "author": "vityaschel <vityaschel@utidteam.com> (https://vityaschel.utidteam.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/VityaSchel/ruswordconbot/issues"
+  },
+  "homepage": "https://github.com/VityaSchel/ruswordconbot#readme",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "fastify": "^3.21.3",
+    "mongodb": "^3.6.8",
+    "node-telegram-bot-api": "^0.53.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.32.0"
+  }
+}

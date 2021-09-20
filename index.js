@@ -20,7 +20,7 @@ app.post(`/bot${TOKEN}`, (req, reply) => {
   reply.code(200)
 })
 
-app.listen(port, (err, address) => {
+app.listen(port, process.env.DB_IP, (err, address) => {
   if(err) throw err
   console.log(`Conjugation bot server is listening on ${address}`)
 })

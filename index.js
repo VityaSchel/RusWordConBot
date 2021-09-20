@@ -1,7 +1,7 @@
 import 'dotenv/config'
 import TelegramBot from 'node-telegram-bot-api'
-import express from 'express'
-import MongoClient from 'mongodb'
+import fastify from 'fastify'
+import mongodb from 'mongodb'
 import assert from 'assert'
 
 const url = 'https://conjugationbot.utidteam.com'
@@ -10,25 +10,27 @@ const TOKEN = process.env.TELEGRAM_TOKEN
 
 const bot = new TelegramBot(TOKEN)
 
-bot.setWebHook(`${url}/bot${TOKEN}`, {drop_pending_updates: true})
+bot.setWebHook(`${url}/bot${TOKEN}`, { drop_pending_updates: true })
 
-const app = express()
-app.use(express.json())
+const app = fastify()
 
-app.post(`/bot${TOKEN}`, (req, res) => {
+app.post(`/bot${TOKEN}`, (req, reply) => {
   bot.processUpdate(req.body)
-  res.sendStatus(200)
+  reply.status(200).send()
 })
 
-let server = app.listen(port, () => console.log(`Conjugation bot server is listening on http://localhost:${port}`))
+app.listen(port, '127.0.0.1', (err, address) => {
+  if(err) throw err
+  console.log(`Conjugation bot server is listening on ${address}`)
+})
 
 const dburl = `mongodb://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_IP}:${process.env.DB_PORT}/?authSource=admin&readPreference=primary`
 const dbName = 'conjugation_bot'
-const dbclient = new MongoClient(dburl)
+const dbclient = new mongodb.MongoClient(dburl)
 let db
 dbclient.connect(err => {
   assert.equal(null, err)
-  console.log('Connected successfully to server')
+  console.log('Successfully connected to server')
   db = dbclient.db(dbName)
 })
 
@@ -98,6 +100,9 @@ const generateNewWord = userID => {
 const randomIndice = array => array[Math.floor(Math.random()*array.length)]
 
 process.on('SIGINT', () => {
-  server.close()
+  console.log('Closing connections...')
+  app.close()
   dbclient.close()
+  console.log('Closed all connections')
+  process.exit(2)
 })

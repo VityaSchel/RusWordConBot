@@ -6,12 +6,11 @@ import assert from 'assert'
 
 const url = 'https://conjugationbot.utidteam.com'
 const port = 24521
-console.log('env', process.env)
 const TOKEN = process.env.TELEGRAM_TOKEN
 
 const bot = new TelegramBot(TOKEN)
 
-bot.setWebHook(`${url}/bot${TOKEN}`, { drop_pending_updates: true })
+// bot.setWebHook(`${url}/bot${TOKEN}`, { drop_pending_updates: true })
 
 const app = fastify()
 
@@ -33,11 +32,11 @@ dbclient.connect(err => {
   db = dbclient.db(dbName)
 })
 
-bot.on('message', async msg => {
-  if(msg.chat.type !== 'private'){ return }
-  await checkPreviousWord(msg)
-  sendNewWord(msg)
-})
+// bot.on('message', async msg => {
+//   if(msg.chat.type !== 'private'){ return }
+//   await checkPreviousWord(msg)
+//   sendNewWord(msg)
+// })
 
 const checkPreviousWord = async msg => {
   let { correctConjIndex, isException } = await previousWord(msg.chat.id)
@@ -99,6 +98,8 @@ const generateNewWord = userID => {
 const randomIndice = array => array[Math.floor(Math.random()*array.length)]
 
 process.on('SIGINT', () => {
+  console.log('Closing connections...')
   app.close()
   dbclient.close()
+  console.log('Closed all connections')
 })

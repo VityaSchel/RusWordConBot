@@ -1,5 +1,5 @@
 import 'dotenv/config'
-import TelegramBot from 'node-telegram-bot-api'
+// import TelegramBot from 'node-telegram-bot-api'
 import fastify from 'fastify'
 import { checkPreviousWord, sendNewWord } from './words.js'
 import connectDB from './dbdriver.js'
@@ -19,14 +19,14 @@ app.listen(port, '127.0.0.1', async (err, address) => {
   await connectDB()
   console.log(`Conjugation bot server is listening on ${address}`)
 
-  const bot = new TelegramBot(TOKEN)
-  global.bot = bot
-  bot.setWebHook(`${url}/bot${TOKEN}`, { drop_pending_updates: true })
-  bot.on('message', async msg => {
-    if(msg.chat.type !== 'private') { return }
-    await checkPreviousWord(msg)
-    sendNewWord(msg)
-  })
+  // const bot = new TelegramBot(TOKEN)
+  // global.bot = bot
+  // bot.setWebHook(`${url}/bot${TOKEN}`, { drop_pending_updates: true })
+  // bot.on('message', async msg => {
+  //   if(msg.chat.type !== 'private') { return }
+  //   await checkPreviousWord(msg)
+  //   sendNewWord(msg)
+  // })
 })
 
 process.on('SIGINT', () => {

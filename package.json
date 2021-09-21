@@ -1,6 +1,6 @@
 {
   "name": "conjugation_bot",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Бот для тренировки умения различать 1-ое и 2-ое спряжение в русском языке",
   "type": "module",
   "main": "index.js",

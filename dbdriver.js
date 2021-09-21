@@ -1,12 +1,15 @@
-import mongodb from 'mongodb'
+import level from 'level'
 
 export default async function connect() {
-  const dburl = `mongodb://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_IP}:${process.env.DB_PORT}/?authSource=admin&readPreference=primary`
-  const dbName = 'conjugation_bot'
-  const dbclient = new mongodb.MongoClient(dburl)
-
-  await dbclient.connect()
-
-  global.dbclient = dbclient
-  global.db = dbclient.db(dbName)
+  const db = level('rus-word-con-bot_db')
+  db.has = async key => {
+    try {
+      await global.db.get(key)
+    } catch (e) {
+      if(e.type === 'NotFoundError') return false
+      else throw e
+    }
+    return true
+  }
+  global.db = db
 }

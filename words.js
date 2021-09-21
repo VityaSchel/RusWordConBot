@@ -1,5 +1,6 @@
 import { loadJsonFileSync } from 'load-json-file'
 const wordsList = loadJsonFileSync('./wordsList.json')
+import { randomIndice, parseFromDb, stringifyToDb } from './utils.js'
 
 export const checkPreviousWord = async msg => {
   let { correctConjIndex, isException } = await previousWordOfUser(msg.chat.id)
@@ -21,12 +22,12 @@ export const checkPreviousWord = async msg => {
 }
 
 const previousWordOfUser = async chatID => {
-  let user = await global.db.collection('user_data').findOne({ userID: chatID })
-  if(user === null){
-    global.db.collection('user_data').insertOne({ userID: chatID })
-    return { correctConjIndex: null, isException: null }
-  } else {
+  const hasPreviousMessage = await global.db.has(chatID)
+  if(hasPreviousMessage) {
+    const user = parseFromDb(await global.db.get(chatID))
     return { correctConjIndex: user.correctConjIndex, isException: user.isException }
+  } else {
+    return { correctConjIndex: null, isException: null }
   }
 }
 
@@ -39,7 +40,7 @@ export const sendNewWord = async msg => {
   )
 }
 
-const generateNewWord = userID => {
+const generateNewWord = chatID => {
   let conjIndex = Math.floor(Math.random()*2)+1
   let isException = !Math.floor(Math.random()*5)
 
@@ -50,14 +51,9 @@ const generateNewWord = userID => {
     word = randomIndice(isException ? wordsList.conj1.exceptions : wordsList.conj2.list)
   }
 
-  global.db.collection('user_data').updateOne(
-    { userID: userID },
-    { $set: { correctConjIndex: conjIndex, isException: isException } }
-  )
+  global.db.put(chatID, stringifyToDb(conjIndex, isException))
 
   return {
     word: word
   }
 }
-
-const randomIndice = array => array[Math.floor(Math.random()*array.length)]

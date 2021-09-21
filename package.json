@@ -28,6 +28,7 @@
   "dependencies": {
     "dotenv": "^10.0.0",
     "fastify": "^3.21.3",
+    "load-json-file": "^7.0.1",
     "mongodb": "^3.6.8",
     "node-telegram-bot-api": "^0.53.0"
   },

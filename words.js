@@ -1,4 +1,5 @@
-import wordsList from './wordsList.json'
+import { loadJsonFileSync } from 'load-json-file'
+const wordsList = loadJsonFileSync('./wordsList.json')
 const db = global.db
 
 export const checkPreviousWord = async msg => {

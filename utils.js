@@ -2,7 +2,7 @@ export const randomIndice = array => array[Math.floor(Math.random()*array.length
 export const parseFromDb = string => {
   return {
     correctConjIndex: Number(string[0]),
-    isException: Boolean(string.substring(1))
+    isException: string.substring(1) === 'true'
   }
 }
 export const stringifyToDb = (correctConjIndex, isException) => {

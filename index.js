@@ -30,9 +30,6 @@ app.listen(port, '127.0.0.1', async (err, address) => {
 })
 
 process.on('SIGINT', () => {
-  console.log('Closing connections...')
   app.close()
-  global.dbclient.close()
-  console.log('Closed all connections')
   process.exit(2)
 })

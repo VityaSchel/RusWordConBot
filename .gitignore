@@ -1,3 +1,4 @@
 /node_modules/**
 .DS_Store
 .env
+rus-word-con-bot_db
